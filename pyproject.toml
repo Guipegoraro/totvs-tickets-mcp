@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "totvs-tickets-mcp"
+version = "0.1.0"
+description = "MCP server local que expoe os tickets do Portal do Cliente TOTVS (suporte.totvs.com) como tools read-only"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Guilherme Pegoraro" }]
+keywords = ["mcp", "totvs", "suporte", "tickets", "claude", "anthropic"]
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Operating System :: OS Independent",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: MacOS",
+    "Operating System :: POSIX :: Linux",
+]
+
+dependencies = [
+    "mcp>=1.0",
+    "httpx>=0.27",
+    "keyring>=25.0",
+    # cifra do token de tickets em disco (Fernet). Cross-platform.
+    "cryptography>=42.0",
+    # geracao do codigo TOTP a partir do seed do autenticador (login automatico).
+    "pyotp>=2.9",
+]
+
+[project.scripts]
+totvs-tickets-mcp = "totvs_tickets_mcp.server:main"
+totvs-tickets-setup = "totvs_tickets_mcp.setup_credentials:main"
+totvs-tickets-probe = "totvs_tickets_mcp.probe_login:main"
+
+[project.urls]
+Repository = "https://github.com/guipegoraro/totvs-tickets-mcp"
+
+[tool.setuptools.packages.find]
+include = ["totvs_tickets_mcp*"]
+exclude = ["tests*"]
