@@ -31,7 +31,7 @@ Autenticacao: automatica (Fluig Identity com senha + MFA/TOTP -> SAML SSO -> jwt
 
 Convencoes (load-bearing):
 
-1. BUSCA de tickets e por ORGANIZACAO, nao por "meus tickets". IMPORTANTE: a org PRIMARIA/pessoal do usuario normalmente retorna VAZIO — nao e onde os chamados estao. Por padrao, `totvs_tickets_listar` busca na org configurada (env TOTVS_DEFAULT_ORG) ou, se nao configurada, em TODAS as orgs visiveis. Para escopar, passe `organization_ids` com os ids desejados; passe `organization_ids=[]` (lista vazia) pra buscar em TODAS as orgs. Veja as orgs disponiveis (e seus ids) com `totvs_whoami`. A busca ve tickets de qualquer solicitante da org (nao so os do usuario), casando por `keywords` no titulo/numero/conteudo.
+1. PADRAO DA BUSCA — assuma isto salvo instrucao explicita em contrario do usuario: (a) a busca e de tickets da **TOTVS S.A** (org configurada em TOTVS_DEFAULT_ORG); (b) a visao e `ticket_views=3` (tickets criados por OUTROS usuarios). So mude a org ou a visao se o usuario pedir de forma explicita (ex: "meus tickets", "na org X", "em todas as orgs"). Detalhes: a busca e por ORGANIZACAO, nao "meus tickets"; a org primaria/pessoal do usuario costuma retornar VAZIO. Para escopar outra org, passe `organization_ids` (ids via `totvs_whoami`); `organization_ids=[]` = TODAS as orgs visiveis. A busca ve tickets de qualquer solicitante da org, casando `keywords` em numero/titulo/conteudo.
 
 2. Status de ticket (valores do filtro `status` em `totvs_tickets_listar`): lista oficial confirmada via `totvs_tickets_status`: `new_open_hold` = Aberto, `pending` = Pendente cliente, `solved` = Validacao cliente, `closed` = Fechado. Se a TOTVS adicionar/alterar valores, `totvs_tickets_status` e a fonte da verdade.
 
@@ -41,7 +41,7 @@ Convencoes (load-bearing):
 
 5. Ao citar um ticket, inclua o numero (`ticketId`). NAO invente URL de ticket — o padrao de URL da tela de detalhe do portal nao foi confirmado; se precisar, oriente o usuario a abrir pelo portal.
 
-6. `ticket_views` em `totvs_tickets_listar` (load-bearing, semantica confirmada pelo usuario): `1` = meus tickets (abertos por mim), `2` = tickets em que estou em copia, `3` = tickets criados por OUTROS usuarios da org (DEFAULT, e onde esta o volume). Sao conjuntos DISJUNTOS — se o usuario pedir "todos os meus envolvimentos", consulte as 3 visoes e una. Buscas por assunto/numero geralmente usam `3`.
+6. `ticket_views` em `totvs_tickets_listar` (load-bearing, semantica confirmada pelo usuario): `1` = meus tickets (abertos por mim), `2` = tickets em que estou em copia, `3` = tickets criados por OUTROS usuarios da org. **DEFAULT = `3`** (tickets de outros) — assuma essa visao salvo pedido explicito do usuario ("meus tickets" -> 1, "em que estou em copia" -> 2). Sao conjuntos DISJUNTOS — se o usuario pedir "todos os meus envolvimentos", consulte as 3 visoes e una.
 """
 
 

@@ -34,18 +34,21 @@ pedindo `totvs-tickets-setup`.
 
 ## Convencoes load-bearing
 
-1. **Busca e por ORGANIZACAO, nao "meus tickets".** A org primaria/pessoal do
-   usuario normalmente vem VAZIA. Por padrao `totvs_tickets_listar` usa a org
-   configurada em `TOTVS_DEFAULT_ORG` ou, se nao houver, TODAS as orgs visiveis.
-   Para escopar, passe `organization_ids` (ids via `totvs_whoami`);
-   `organization_ids=[]` busca em todas. A busca ve tickets de **qualquer
-   solicitante** da org, casando `keywords` em numero/titulo/conteudo.
+1. **PADRAO DA BUSCA (assuma salvo instrucao explicita em contrario):** a busca e
+   de tickets da **TOTVS S.A** (org configurada em `TOTVS_DEFAULT_ORG`) e da visao
+   `ticket_views=3` (tickets criados por OUTROS usuarios). So mude a org/visao se o
+   usuario pedir explicitamente ("meus tickets", "na org X", "em todas as orgs").
+   Detalhe: a busca e por ORGANIZACAO, nao "meus tickets" — a org primaria/pessoal
+   do usuario costuma vir VAZIA. Para escopar outra org, passe `organization_ids`
+   (ids via `totvs_whoami`); `organization_ids=[]` busca em TODAS. A busca ve
+   tickets de **qualquer solicitante** da org, casando `keywords` em
+   numero/titulo/conteudo.
 
 2. **`ticket_views` (seletor de visao)** — semantica confirmada pelo dono do
    portal: `1` = tickets abertos por mim; `2` = tickets em que estou em copia;
-   `3` = tickets criados por OUTROS usuarios da org (**default**, e onde esta o
-   volume). Sao conjuntos DISJUNTOS. Buscas por assunto/numero geralmente usam
-   `3`. Se o usuario pedir "tudo que me envolve", consulte as 3 visoes e una.
+   `3` = tickets criados por OUTROS usuarios da org. **DEFAULT = `3`** — assuma
+   essa visao salvo pedido explicito. Sao conjuntos DISJUNTOS. Se o usuario pedir
+   "tudo que me envolve", consulte as 3 visoes e una.
 
 3. **Status** — use `totvs_tickets_status` como fonte da verdade. Valores
    observados: `new_open_hold` = Aberto, `pending` = Pendente cliente,
