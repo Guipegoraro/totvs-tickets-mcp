@@ -9,7 +9,7 @@ description = "MCP server local que expoe os tickets do Portal do Cliente TOTVS 
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
-authors = [{ name = "Guilherme Pegoraro" }]
+authors = [{ name = "Guipegoraro" }]
 keywords = ["mcp", "totvs", "suporte", "tickets", "claude", "anthropic"]
 classifiers = [
     "License :: OSI Approved :: MIT License",
