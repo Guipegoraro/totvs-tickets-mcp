@@ -83,6 +83,35 @@ claude mcp add -s user totvs-tickets -- totvs-tickets-mcp
 Apos editar `client.py`/`server.py`, **reinicie a sessao** do Claude Code (o MCP
 roda em processo persistente e nao recarrega sozinho).
 
+### Um processo para varias sessoes (`--http`)
+
+Em stdio, cada sessao do Claude Code sobe o proprio processo e faz o proprio
+login SAML/MFA. Com `--http`, um processo so atende todas as sessoes por
+streamable HTTP, com um login e um token de tickets:
+
+```bash
+totvs-tickets-mcp --http --port 47103 --token-file C:/caminho/token
+```
+
+- Escuta so em `127.0.0.1`.
+- Toda requisicao precisa de `Authorization: Bearer <token>`, com o token do
+  arquivo (minimo 32 caracteres). Sem ele: 401. Deixe o arquivo legivel so
+  pelo seu usuario.
+- Host e Origin que nao sejam locais sao recusados (protecao contra DNS
+  rebinding do FastMCP).
+- `TOTVS_DEFAULT_ORG` e as demais variaveis vao no ambiente do processo.
+- O processo nao reinicia sozinho: rode-o por um gerenciador (tarefa agendada,
+  servico) que o suba no logon e o reinicie se cair.
+
+Registro no Claude Code, com o token enviado por `headersHelper` (comando que
+imprime o JSON dos headers):
+
+```bash
+claude mcp add-json totvs-tickets -s user '{"type":"http","url":"http://127.0.0.1:47103/mcp","headersHelper":"node C:/caminho/headers.mjs"}'
+```
+
+As chamadas de sessoes diferentes sao atendidas uma por vez.
+
 ## Tools (todas read-only)
 
 | Tool                              | Endpoint                                   | O que faz |

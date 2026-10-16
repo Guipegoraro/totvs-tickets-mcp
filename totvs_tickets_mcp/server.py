@@ -14,6 +14,7 @@ from typing import Any
 from mcp.server.fastmcp import FastMCP
 from mcp.types import ToolAnnotations
 
+from . import http_transport
 from .client import TotvsTicketsClient
 
 # Organizacao padrao da BUSCA de tickets (nao a org do usuario). Configuravel por
@@ -256,8 +257,12 @@ def totvs_departamentos() -> Any:
     )
 
 
-def main() -> None:
-    mcp.run()
+def main(argv: list[str] | None = None) -> None:
+    args = http_transport.parse_args(argv)
+    if args.http:
+        http_transport.serve(mcp, args.port, args.token_file)
+    else:
+        mcp.run()
 
 
 if __name__ == "__main__":
