@@ -214,10 +214,14 @@ def _totp_now(seed: str) -> str:
     """Gera o codigo TOTP de 6 digitos a partir do seed do autenticador."""
     import pyotp
 
+    class _TotvsTOTP(pyotp.TOTP):
+        # O seed do MFA da TOTVS tem 80 bits, e o pyotp 2.12 em diante recusa menos de 112.
+        min_secret_length_bits = 80
+
     # Aceita seed com espacos/lowercase (como o app mostra) — pyotp exige base32
     # sem espacos e maiusculo.
     cleaned = seed.replace(" ", "").upper()
-    return pyotp.TOTP(cleaned).now()
+    return _TotvsTOTP(cleaned).now()
 
 
 # --- Parser de form SAML (auto-post) --------------------------------------

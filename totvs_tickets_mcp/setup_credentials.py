@@ -102,9 +102,9 @@ def setup() -> int:
         return 2
     # valida o seed cedo: precisa ser base32 valido
     try:
-        import pyotp
+        from .client import _totp_now
 
-        pyotp.TOTP(seed.replace(" ", "").upper()).now()
+        _totp_now(seed)
     except Exception:
         print("Seed TOTP invalido (nao e base32). Confira e tente de novo.")
         return 2
